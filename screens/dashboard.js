@@ -40,7 +40,7 @@ export default class DashboardScreen extends Component {
           <ScrollView style={styles.scrollView}>
             <View style={styles.displayFlex}>
               <View style={styles.widgetBoxes}>
-                  <Text style={styles.widgetHeading}>Device ID</Text>
+                  <Text style={styles.widgetHeading}>DEVICE ID</Text>
                   <View style={{ flexDirection: 'row' }}>
                     <Text style={styles.widgetVal}>1</Text>
                     <Icon style={styles.widgetIconStyle} name="fire" size={30} />
