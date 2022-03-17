@@ -10,11 +10,14 @@
     "eject": "expo eject"
   },
   "dependencies": {
+    "@react-keycloak/native": "^0.6.0",
     "@react-native-community/masked-view": "^0.1.11",
     "@react-navigation/bottom-tabs": "^6.2.0",
+    "@react-navigation/drawer": "^6.3.1",
     "@react-navigation/native": "^6.0.8",
     "@react-navigation/native-stack": "^6.5.0",
     "@react-navigation/stack": "^6.1.1",
+    "@testing-library/react": "^12.1.4",
     "expo": "~44.0.0",
     "expo-status-bar": "~1.2.0",
     "express": "^4.17.3",
@@ -26,8 +29,10 @@
     "react-native-chart-kit": "^6.12.0",
     "react-native-chartjs": "^1.0.3",
     "react-native-fontawesome": "^7.0.0",
-    "react-native-gesture-handler": "~2.1.0",
+    "react-native-gesture-handler": "^2.3.1",
+    "react-native-inappbrowser-reborn": "^3.6.3",
     "react-native-line-chart": "^1.0.4",
+    "react-native-paper": "^4.11.2",
     "react-native-reanimated": "~2.3.1",
     "react-native-safe-area-context": "3.3.2",
     "react-native-screens": "~3.10.1",
@@ -35,11 +40,16 @@
     "react-native-vector-icons": "^9.1.0",
     "react-native-web": "0.17.1",
     "react-navigation": "^4.4.4",
+    "react-navigation-drawer": "^2.7.2",
     "socket.io": "^4.4.1",
     "socket.io-client": "^4.4.1"
   },
   "devDependencies": {
-    "@babel/core": "^7.12.9"
+    "@babel/core": "^7.12.9",
+    "@testing-library/react-native": "^9.0.0",
+    "@types/react": "~17.0.21",
+    "@types/react-native": "~0.64.12",
+    "typescript": "~4.3.5"
   },
   "private": true
 }
