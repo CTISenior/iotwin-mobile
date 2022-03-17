@@ -52,31 +52,3 @@ const Dashboard = ({ navigation }) => {
 };
 
 export default Dashboard;
-/*          <Text
-            style={{
-              fontSize: 25,
-              textAlign: 'center',
-              marginBottom: 16,
-            }}>
-            Device 1
-          </Text>
-          <Button
-            onPress={() => navigation.navigate('Devices')}
-            title="Show the Graph of Devices"
-          />
-                    <List.Section>
-            <List.Subheader>Your Devices</List.Subheader>
-            <List.Item
-              title="Device 1 - A Building"
-              left={() => <List.Icon icon="" />}
-            />
-            <Button
-              onPress={() => navigation.navigate('Devices')}
-              title="Go to Devices Screen"
-            />
-            <List.Item
-              title="Second Item"
-              left={() => <List.Icon color="#000" icon="folder" />}
-            />
-          </List.Section>
-          */
