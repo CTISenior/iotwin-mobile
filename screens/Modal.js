@@ -10,9 +10,9 @@ import {
 import LineChart from '../screens/Chart';
 import { List } from 'react-native-paper';
 
-const Devices = ({ navigation }) => {
+const Modal = ({ navigation }) => {
   return (
-    <SafeAreaView style={{ flex: 1, backgroundColor: 'white' }}>
+    <SafeAreaView style={{ backgroundColor:'white', flex: 1 }}>
         <View
           style={{
             flex: 1,
@@ -26,17 +26,10 @@ const Devices = ({ navigation }) => {
             left={(props) => <List.Icon {...props} icon="radio-tower" />}
           />
           <LineChart />
-          <List.Item
-            style={{ width: 200 }}
-            title="Device 2"
-            description="B Building"
-            left={(props) => <List.Icon {...props} icon="radio-tower" />}
-          />
-          <LineChart />
         </View>
         <TouchableOpacity
           style={{
-            bottom: 0,
+            bottom: 30,
             left: 100,
             marginTop: 10,
             borderWidth: 0,
@@ -49,10 +42,10 @@ const Devices = ({ navigation }) => {
             borderRadius: 50,
           }}
           onPress={() => navigation.navigate('Dashboard')}>
-          <Text style={{ fontSize: 20}}>Go to Dashboard</Text>
+          <Text style={{fontSize: 20}}>Go to Dashboard</Text>
         </TouchableOpacity>
     </SafeAreaView>
   );
 };
 
-export default Devices;
+export default Modal;

@@ -9,8 +9,9 @@ import { createDrawerNavigator } from '@react-navigation/drawer';
 
 import Dashboard from './screens/Dashboard';
 import Devices from './screens/Devices';
+import Login from './screens/Login';
+import Modal from './screens/Modal';
 
-import CustomSidebarMenu from './CustomSidebarMenu';
 
 const Stack = createStackNavigator();
 const Drawer = createDrawerNavigator();
@@ -22,6 +23,14 @@ const NavigationDrawerStructure = (props) => {
 
   return <View style={{ flexDirection: 'row' }}></View>;
 };
+
+function LoginScreenStack({ navigation }) {
+  return (
+    <Stack.Navigator screenOptions={{ headerShown: false }}>
+      <Stack.Screen name="Login" component={Login} />
+    </Stack.Navigator>
+  );
+}
 
 function firstScreenStack({ navigation }) {
   return (
@@ -79,23 +88,28 @@ function secondScreenStack({ navigation }) {
 function App() {
   return (
     <NavigationContainer>
-      <Drawer.Navigator
-        drawerContentOptions={{
-          activeTintColor: '#e91e63',
-          itemStyle: { marginVertical: 5 },
-        }}
-        drawerContent={(props) => <CustomSidebarMenu {...props} />}>
-        <Drawer.Screen
-          name="Dashboard"
-          options={{ drawerLabel: 'Dashboard' }}
-          component={firstScreenStack}
-        />
-        <Drawer.Screen
-          name="Devices"
-          options={{ drawerLabel: 'Devices' }}
-          component={secondScreenStack}
-        />
-      </Drawer.Navigator>
+      <Stack.Navigator>
+        <Stack.Group>
+          <Stack.Screen name="Login" component={Login} />
+          <Stack.Screen
+            name="Dashboard"
+            options={{ drawerLabel: 'Dashboard' }}
+            component={firstScreenStack}
+          />
+          <Stack.Screen
+            name="Devices"
+            options={{ drawerLabel: 'Devices' }}
+            component={secondScreenStack}
+          />
+        </Stack.Group>
+        <Stack.Group screenOptions={{ presentation: 'modal' }}>
+          <Stack.Screen 
+           name="Modal"
+           options={{title: 'Graph of Selected Device'}}
+           component={Modal}
+          />
+        </Stack.Group>
+      </Stack.Navigator>
     </NavigationContainer>
   );
 }
