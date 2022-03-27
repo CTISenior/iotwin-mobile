@@ -25,7 +25,7 @@ function Login() {
       <View style={styles.Middle}>
         <Text style={styles.LoginText}>IoTwin</Text>
       </View>
-      
+      {/* Username Input Field */}
       <View style={styles.buttonStyle}>
         <View style={styles.emailInput}>
           <Input
@@ -54,6 +54,7 @@ function Login() {
         </View>
       </View>
 
+      {/* Password Input Field */}
       <View style={styles.buttonStyleX}>
         <View style={styles.emailInput}>
           <Input
@@ -85,6 +86,7 @@ function Login() {
         </View>
       </View>
 
+      {/* Button */}
       <View style={styles.buttonStyle}>
         <TouchableOpacity
           style={{
@@ -150,3 +152,11 @@ const styles = StyleSheet.create({
     backgroundColor: '#026efd',
   },
 });
+/*
+      <View style={styles.text2}>
+        <Text>Sign in as guest -></Text>
+        <TouchableOpacity onPress={() => navigation.navigate('Dashboard')}>
+          <Text style={styles.signupText}> Sign In</Text>
+        </TouchableOpacity>
+      </View>
+*/

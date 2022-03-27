@@ -10,6 +10,8 @@ import { createDrawerNavigator } from '@react-navigation/drawer';
 import Dashboard from './screens/Dashboard';
 import Devices from './screens/Devices';
 import Login from './screens/Login';
+import TemperatureScreen from './screens/Chart';
+import CustomSidebarMenu from './CustomSidebarMenu';
 import Modal from './screens/Modal';
 
 
@@ -40,12 +42,12 @@ function firstScreenStack({ navigation }) {
         component={Dashboard}
         options={{
           headerShown: false,
-          title: '',
+          title: '', 
           headerLeft: () => (
             <NavigationDrawerStructure navigationProps={navigation} />
           ),
           headerStyle: {
-            backgroundColor: '#00FF7F',
+            backgroundColor: '#00FF7F', 
           },
           headerTintColor: 'black',
           headerTitleStyle: {

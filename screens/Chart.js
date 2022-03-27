@@ -16,27 +16,27 @@ export default function App() {
       <StatusBar style="auto" />
       <LineChart
         data={{
-          labels: ['Temperature', 'Humidity'],
+          labels: [],
           datasets: [
             {
               data: [
-                Math.random() * 100 / 2,
-                Math.random() * 100 / 2,
-                Math.random() * 100 / 2,
-                Math.random() * 100 / 2,
-                Math.random() * 100 / 2,
-                Math.random() * 100 / 2,
+                Math.floor(Math.random() * (15) + 20),
+                Math.floor(Math.random() * (15) + 20),
+                Math.floor(Math.random() * (15) + 20),
+                Math.floor(Math.random() * (15) + 20),
+                Math.floor(Math.random() * (15) + 20),
+                Math.floor(Math.random() * (15) + 20),
               ],
               color: (opacity = 1) => `rgba(255, 0, 0, ${opacity})`,
             },
             {
               data: [
-                (Math.random() * 100) / 3,
-                (Math.random() * 100) / 3,
-                (Math.random() * 100) / 4,
-                (Math.random() * 100) / 3,
-                (Math.random() * 100) / 4,
-                (Math.random() * 100) / 4,
+                Math.floor(Math.random() * 9.0 + 8.5),
+                Math.floor(Math.random() * 9.0 + 8.5),
+                Math.floor(Math.random() * 9.0 + 8.5),
+                Math.floor(Math.random() * 9.0 + 8.5),
+                Math.floor(Math.random() * 9.0 + 8.5),
+                Math.floor(Math.random() * 9.0 + 8.5),
               ],
             },
           ],
@@ -52,7 +52,7 @@ export default function App() {
           backgroundColor: '#00008b',
           backgroundGradientFrom: 'white',
           backgroundGradientTo: '#white',
-          decimalPlaces: 1, // optional, defaults to 2dp
+          decimalPlaces: 2, // optional, defaults to 2dp
           color: (opacity = 1) => `rgba(0, 255, 0, ${opacity})`,
           labelColor: (opacity = 1) => `rgba(0, 255, 0, ${opacity})`,
           style: {

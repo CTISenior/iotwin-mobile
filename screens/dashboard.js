@@ -1,4 +1,5 @@
-import React, { useState, useEffect } from 'react';
+import React from 'react';
+import { useState, useEffect} from 'react';
 import {
   StyleSheet,
   View,
@@ -12,28 +13,13 @@ import {
   TouchableHighlight,
 } from 'react-native';
 import LineChart from '../screens/Chart';
-import { IconButton, Colors, List, Divider } from 'react-native-paper';
+import { Card, IconButton, Colors, List, Divider } from 'react-native-paper';
 import Snackbar from 'react-native-snackbar-component';
 
-/*
-const App = () => {
-  const [currentDate, setCurrentDate] = useState('');
+import axios from 'axios';
 
-  useEffect(() => {
-    var date = new Date().getDate(); 
-    var month = new Date().getMonth() + 1;
-    var year = new Date().getFullYear();
-    var hours = new Date().getHours();
-    var min = new Date().getMinutes();
-    var sec = new Date().getSeconds();
-    setCurrentDate(
-      date + '/' + month + '/' + year + ' ' + hours + ':' + min + ':' + sec
-    );
-  }, []);
-};
-*/
 const showAlert = () =>
-  Alert.alert('Warning', 'The temperature was reached 40 degree.', [
+  Alert.alert('Warning', 'The temperature was reached 40 degree at B Building.', [
     {
       text: 'Ok',
       onPress: () => Alert.alert('Warning Seen and Deleted.'),
@@ -41,8 +27,13 @@ const showAlert = () =>
     },
   ]);
 
-const Dashboard = ({ navigation }) => {
+const AllDevices = () => (
+  <View>
+    <Text>AAAAAA</Text>
+  </View>
+);
 
+const Dashboard = ({ navigation }) => {
   const [snackIsVisible, setSnackIsVisible] = useState(true);
   const [distance, setDistance] = useState(0);
 
@@ -80,7 +71,7 @@ const Dashboard = ({ navigation }) => {
             justifyContent: 'center',
           }}>
           <List.AccordionGroup>
-            <View style={{flex: 1}}>
+            <View style={{ flex: 1 }}>
               <Text
                 style={{
                   width: 400,
@@ -149,9 +140,70 @@ const Dashboard = ({ navigation }) => {
           borderRadius: 50,
         }}
         onPress={() => navigation.navigate('Devices')}>
-        <Text style={{fontSize: 20,}}>See Graph of All Devices</Text>
+        <Text style={{ fontSize: 20 }}>See Graph of All Devices</Text>
       </TouchableOpacity>
     </SafeAreaView>
   );
 };
 export default Dashboard;
+
+/*   const deviceList = [];
+
+  axios
+    .get('http://176.235.202.77:4000/api/v1/devices')
+    .then((response) => {
+      console.log(response);
+      response.data.forEach((element) => {
+        const temp = {
+          id: element.id,
+          name: element.name,
+          sn: element.sn,
+          protocol: element.protocol,
+          model: element.model,
+          type: element.type.join('-'),
+          building_id: element.building_id,
+          description: element.description ? element.description : '-',
+          created_at: element.created_at,
+          status: element.status,
+        };
+        deviceList.push(temp);
+      });
+    })
+    .catch((error) => {
+      if (error.response) {
+        console.log(error.response.data);
+        console.log(error.response.status);
+        console.log(error.response.headers);
+      } else if (error.request) {
+        console.log(error.request);
+      } else {
+        console.log('Error', error.message);
+      }
+      console.log(error.config);
+    });
+
+  const ShowDevice = () => (
+    //   deviceList.map((element) => {
+    //  for(let i = 0;i < 5; i++)
+    <View>
+      <List.Accordion title={deviceList} id="3">
+        <TouchableOpacity
+          style={{
+            left: 100,
+            bottom: 0,
+            borderWidth: 0,
+            borderColor: 'black',
+            alignItems: 'center',
+            justifyContent: 'center',
+            width: 200,
+            height: 30,
+            backgroundColor: '#00FF7F',
+            borderRadius: 50,
+          }}
+          onPress={() => navigation.navigate('Modal')}>
+          <Text>See Graph</Text>
+        </TouchableOpacity>
+      </List.Accordion>
+    </View>
+  );
+//   });*/
