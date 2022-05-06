@@ -1,5 +1,5 @@
 import { StatusBar } from 'expo-status-bar';
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { StyleSheet, Text, View, TouchableOpacity, SafeAreaView } from 'react-native';
 import {
   Input,
@@ -15,10 +15,22 @@ import { useNavigation } from '@react-navigation/native';
 import { alignContent, flex, flexDirection, width } from 'styled-system';
 
 function Login() {
-  const [username, setUsername] = useState('admin');
-  const [password, setPassword] = useState('passwd');
+  const [username, setUsername] = useState('');
+  const [password, setPassword] = useState('');
 
   const navigation = useNavigation();
+
+
+  const handleLogin = () => {
+    let toast = "";
+    if (username == "admin" && password == "123") {
+      navigation.navigate("Dashboard");
+    } else {
+
+    }
+  };
+
+
   return (
     <SafeAreaView style={{ flex: 1 }}>
       <View style={{ flex: 1, padding: 16 }}>
@@ -88,7 +100,7 @@ function Login() {
           </View>
           <TouchableOpacity
             style={styles.loginButton}
-            onPress={() => navigation.navigate('Dashboard')}>
+            onPress={handleLogin}>
             <Text style={styles.LoginButtonText}>Login</Text>
           </TouchableOpacity>
         </View>
