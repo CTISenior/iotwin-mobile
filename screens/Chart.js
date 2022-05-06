@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { StyleSheet, View } from 'react-native';
+import { StyleSheet, View, Text } from 'react-native';
 import {
   LineChart,
 } from 'react-native-chart-kit';
@@ -10,22 +10,7 @@ const temp = [];
 const hum = [];
 const tempLabel = [];
 
-export default function App(props) {
-  const { id } = props;
-  socket.emit('telemetry_topic', id);
-
-  socket.on('telemetry_topic_message', function (msg) {
-    let info = JSON.parse(msg);
-    console.log(info);
-    console.log(temp);
-    const date = new Date();
-    if (tempLabel.length > 15) {
-      tempLabel.shift();
-      temp.shift();
-    }
-    temp.push(info.temperature);
-    tempLabel.push(date.getHours() + ':' + date.getMinutes());
-  });
+export default function Chart(props) {
   const [chart, setChart] = useState({
     labels: [],
     datasets: [
@@ -44,36 +29,58 @@ export default function App(props) {
     ],
   });
   useEffect(() => {
-    // setTimeout(() => {
-    setChart(
-      {
-        labels: tempLabel,
-        datasets: [
-          {
-            label: 'Temperature',
-            data: temp,
-            borderColor: '#FF0000',
-            fill: true,
-          },
-          {
-            label: 'Humidity',
-            data: hum,
-            borderColor: '#3e95cd',
-            fill: true,
-          },
-        ],
-      },
-      [tempLabel, temp, hum]
-    );
-    // }, 500)
-  }, [temp]);
+    socket.emit('telemetry_topic', [props.deviceSn]);
+    socket.on('telemetry_topic_message', function (msg) {
+      let info = JSON.parse(msg);
+      console.log(info);
+      const date = new Date();
+      if (tempLabel.length > 15) {
+        tempLabel.shift();
+        temp.shift();
+      }
+      temp.push(info.values.temperature);
+      console.log(temp);
+      tempLabel.push(date.getHours() + ':' + date.getMinutes());
+    });
+    setTimeout(() => {
+      setChart([temp]);
+    }, 500);
+    /*
+    setTimeout(() => {
+
+      setChart(
+        {
+          labels: tempLabel,
+          datasets: [
+            {
+              label: 'Temperature',
+              data: temp,
+              borderColor: '#FF0000',
+              fill: true,
+            },
+            {
+              label: 'Humidity',
+              data: hum,
+              borderColor: '#3e95cd',
+              fill: true,
+            },
+          ],
+        },
+        [tempLabel, temp, hum]
+      );
+    }, 500)*/
+
+  }, []);
   const chartConfig = {
     backgroundGradientFrom: '#1E2923',
     backgroundGradientFromOpacity: 0,
     backgroundGradientTo: '#08130D',
     backgroundGradientToOpacity: 0.5,
-    color: 'red',
+    backgroundColor: "#32CD32",
+    color: (opacity = 1) => `rgba(255, 255, 255, ${opacity})`,
+    labelColor: (opacity = 1) => `rgba(255, 255, 255, ${opacity})`,
   };
+
   return (
     <View style={styles.container}>
       <LineChart
@@ -82,9 +89,19 @@ export default function App(props) {
         height={220}
         chartConfig={chartConfig}
       />
+      <Text>{chart}</Text>
     </View>
+
   );
 }
+/*
+<LineChart
+        //data={chart}
+        //width={400}
+        //height={220}
+        //chartConfig={chartConfig}
+      />*/
+
 const styles = StyleSheet.create({
   container: {
     flex: 1,

@@ -30,8 +30,9 @@ const Notification = ({ navigation }) => {
   const [selectedNotificationSerialNo, setSelectedNotificationSerialNo] = useState(null);
   const [loading, setLoading] = useState(false);
   const [isNotificationLoading, setIsNotificationLoading] = useState(false);
+  const tenantID = "ctis";
   const getNotification = () => {
-    fetch('http://176.235.202.77:4000/api/v1/tenants/ctis/alerts')
+    fetch(`http://176.235.202.77:4000/api/v1/tenants/${tenantID}/alerts`)
       .then((response) => response.json())
       .then((json) => setAllNotification(json))
       .finally(() => {
@@ -119,7 +120,7 @@ const Notification = ({ navigation }) => {
           <List.Item
             titleNumberOfLines={2}
             title={
-              'The notification ' + selectedNotificationSerialNo + ' has been deleted'
+              'The notification for ' + selectedNotificationSerialNo + ' has been deleted'
             }
             labelStyle={{ fontSize: 50 }}
             left={(props) => (
@@ -130,7 +131,7 @@ const Notification = ({ navigation }) => {
                 {...props}
                 icon="close-thick"
                 color={'#000'}
-                labelStyle={{ fontSize: 25 }}
+                labelStyle={{ fontSize: 25, marginRight: 32 }}
                 onPress={closeInfoText}></Button>
             )}
           />
@@ -183,25 +184,3 @@ const Notification = ({ navigation }) => {
   );
 };
 export default Notification;
-
-const styles = StyleSheet.create({
-  navigationButton: {
-    width: '50%',
-    borderRadius: 25,
-    height: 50,
-    alignItems: "center",
-    justifyContent: "center",
-    marginTop: 40,
-    backgroundColor: '#228B22'
-  },
-  navigationButtonText: {
-    fontSize: 25,
-    padding: 5,
-    color: '#FFFAF0',
-    fontWeight: 'bold',
-  },
-  displayInfoText: {
-    fontSize: 25,
-    color: '#000'
-  }
-});

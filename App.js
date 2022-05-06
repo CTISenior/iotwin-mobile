@@ -1,6 +1,5 @@
 import 'react-native-gesture-handler';
 import { StatusBar } from 'expo-status-bar';
-import * as Notifications from 'expo-notifications';
 import Constants from 'expo-constants';
 import React, { useState, useEffect, useRef } from 'react';
 import { View, TouchableOpacity, Image, Alert, Platform } from 'react-native';
@@ -14,38 +13,6 @@ import Modal from './screens/Modal';
 import Notification from './screens/Notification';
 import { DeleteNotification } from './screens/Fetch';
 const navigationRef = createNavigationContainerRef()
-
-
-async function registerForPushNotificationsAsync() {
-  let token;
-  if (Constants.isDevice) {
-    const { status: existingStatus } = await Notifications.getPermissionsAsync();
-    let finalStatus = existingStatus;
-    if (existingStatus !== 'granted') {
-      const { status } = await Notifications.requestPermissionsAsync();
-      finalStatus = status;
-    }
-    if (finalStatus !== 'granted') {
-      alert('Failed to get push token for push notification!');
-      return;
-    }
-    token = (await Notifications.getExpoPushTokenAsync()).data;
-    console.log(token);
-  } else {
-    alert('Must use physical device for Push Notifications');
-  }
-
-  if (Platform.OS === 'android') {
-    Notifications.setNotificationChannelAsync('default', {
-      name: 'default',
-      importance: Notifications.AndroidImportance.MAX,
-      vibrationPattern: [0, 250, 250, 250],
-      lightColor: '#FF231F7C',
-    });
-  }
-
-  return token;
-}
 
 function navigate(name, params) {
   if (navigationRef.isReady()) {
@@ -121,8 +88,9 @@ function SecondScreenStack({ navigation }) {
 function App() {
   //getting the list of notification from the backend
   const [allNotification, setAllNotification] = useState([]);
+  const tenantID = "ctis";
   const getNotification = () => {
-    fetch('http://176.235.202.77:4000/api/v1/alerts')
+    fetch(`http://176.235.202.77:4000/api/v1/tenants/${tenantID}/alerts`)
       .then((response) => response.json())
       .then((json) => setAllNotification(json))
   }
@@ -133,16 +101,14 @@ function App() {
   }, []);
 
   const deleteAllNotification = () => {
-    {
-      allNotification.map(element => {
-        DeleteNotification(element.id)
-          .then(() => {
-            const delNotify = allNotification.filter(notify => notify.id !== element.id);
-            setAllNotification(delNotify);
-          })
-      })
-    }
-
+    allNotification.map(element => {
+      DeleteNotification(element.id)
+        .then(() => {
+          const delNotify = allNotification.filter(notify => notify.id !== element.id);
+          setAllNotification(delNotify);
+        })
+    });
+    navigate('Dashboard');
   }
 
   return (

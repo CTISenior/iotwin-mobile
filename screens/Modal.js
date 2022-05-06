@@ -3,51 +3,54 @@ import {
   View,
   Text,
   SafeAreaView,
-
+  ScrollView,
   StyleSheet,
 } from 'react-native';
 import LineChart from '../screens/Chart';
 import { List, Colors } from 'react-native-paper';
 const Modal = ({ route, navigation }) => {
-  const { deviceName, deviceType, deviceBuilding, deviceSn } = route.params;
+  const { deviceName, deviceSn } = route.params;
+  console.log(deviceSn)
 
   return (
     <SafeAreaView style={{ backgroundColor: 'white', flex: 1 }}>
-      <View style={styles.container}>
-        <View style={styles.cardComponent}>
-          <View style={styles.cardItem}>
-            <List.Icon color={Colors.white} icon="access-point" />
-            <View style={styles.cardItemContent}>
-              <Text style={styles.cardItemContentHeader}>Device ID</Text>
-              <Text style={styles.cardItemContentText}>{deviceSn}</Text>
+      <ScrollView>
+        <View style={styles.container}>
+          <View style={styles.cardComponent}>
+            <View style={styles.cardItem}>
+              <List.Icon color={Colors.white} icon="access-point" />
+              <View style={styles.cardItemContent}>
+                <Text style={styles.cardItemContentHeader}>Device ID</Text>
+                <Text style={styles.cardItemContentText}>{deviceSn}</Text>
+              </View>
+            </View>
+            <View style={styles.cardItem}>
+              <List.Icon color={Colors.white} icon="access-point" />
+              <View style={styles.cardItemContent}>
+                <Text style={styles.cardItemContentHeader}>Device Name</Text>
+                <Text style={styles.cardItemContentText}>{deviceName}</Text>
+              </View>
+            </View>
+            <View style={styles.cardItem}>
+              <List.Icon color={Colors.white} icon="thermometer-lines" />
+              <View style={styles.cardItemContent}>
+                <Text style={styles.cardItemContentHeader}>Max Heat</Text>
+                <Text style={styles.cardItemContentText}>{deviceName}</Text>
+              </View>
+            </View>
+            <View style={styles.cardItem}>
+              <List.Icon color={Colors.white} icon="thermometer-lines" />
+              <View style={styles.cardItemContent}>
+                <Text style={styles.cardItemContentHeader}>Average Heat</Text>
+                <Text style={styles.cardItemContentText}>{deviceName}</Text>
+              </View>
             </View>
           </View>
-          <View style={styles.cardItem}>
-            <List.Icon color={Colors.white} icon="access-point" />
-            <View style={styles.cardItemContent}>
-              <Text style={styles.cardItemContentHeader}>Device Name</Text>
-              <Text style={styles.cardItemContentText}>{deviceName}</Text>
-            </View>
-          </View>
-          <View style={styles.cardItem}>
-            <List.Icon color={Colors.white} icon="thermometer-lines" />
-            <View style={styles.cardItemContent}>
-              <Text style={styles.cardItemContentHeader}>Max Heat</Text>
-              <Text style={styles.cardItemContentText}>{deviceName}</Text>
-            </View>
-          </View>
-          <View style={styles.cardItem}>
-            <List.Icon color={Colors.white} icon="thermometer-lines" />
-            <View style={styles.cardItemContent}>
-              <Text style={styles.cardItemContentHeader}>Average Heat</Text>
-              <Text style={styles.cardItemContentText}>{deviceName}</Text>
-            </View>
+          <View style={styles.chart}>
+            <LineChart deviceSn={deviceSn} />
           </View>
         </View>
-        <View style={styles.chart}>
-          <LineChart />
-        </View>
-      </View>
+      </ScrollView>
     </SafeAreaView>
   );
 };

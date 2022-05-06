@@ -68,8 +68,6 @@ const AllDevices = (props) => (
                 props.navigation.navigate('Modal', {
                   deviceName: element.name,
                   deviceSn: element.sn,
-                  deviceType: element.type,
-                  deviceBuilding: element.asset_id,
                 })
               }></Button>
           </Card.Actions>
@@ -84,8 +82,9 @@ const Dashboard = ({ navigation }) => {
   const [distance, setDistance] = useState(0);
   const [allDevices, setAllDevices] = useState([]);
   const [isLoading, setLoading] = useState(false);
+  const tenantID = "ctis";
   const getDevices = () => {
-    fetch('http://176.235.202.77:4000/api/v1/tenants/ctis/devices')
+    fetch(`http://176.235.202.77:4000/api/v1/tenants/${tenantID}/devices`)
       .then((response) => response.json())
       .then((json) => setAllDevices(json))
       .catch((error) => console.error(error))
