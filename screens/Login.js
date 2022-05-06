@@ -22,7 +22,6 @@ function Login() {
 
 
   const handleLogin = () => {
-    let toast = "";
     if (username == "admin" && password == "123") {
       navigation.navigate("Dashboard");
     } else {

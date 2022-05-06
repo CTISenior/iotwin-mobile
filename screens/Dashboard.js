@@ -53,14 +53,6 @@ const AllDevices = (props) => (
           </Card.Content>
           <Card.Actions style={{ justifyContent: 'center' }}>
             <Button
-              icon="play"
-              color={'#2e323c'}
-              labelStyle={{ fontSize: 30 }}></Button>
-            <Button
-              icon="stop"
-              color={'#2e323c'}
-              labelStyle={{ fontSize: 30 }}></Button>
-            <Button
               icon="chart-line-variant"
               color={'#2e323c'}
               labelStyle={{ fontSize: 30 }}
@@ -124,6 +116,39 @@ const Dashboard = ({ navigation }) => {
               <ActivityIndicator size="large" color="#008000" />
             </View>
           ) : (
+
+            <Card
+              key="1"
+              mode="outlined"
+              style={{
+                margin: 3,
+                flexDirection: 'column',
+                width: '48%',
+                marginTop: 15,
+              }}>
+              <Card.Title
+                title="Erdem Sert"
+                left={LeftContent}
+              />
+              <Card.Content>
+                <Paragraph style={{ textAlign: 'center' }}>
+                  temperature
+                </Paragraph>
+              </Card.Content>
+              <Card.Actions style={{ justifyContent: 'center' }}>
+                <Button
+                  icon="chart-line-variant"
+                  color={'#2e323c'}
+                  labelStyle={{ fontSize: 30 }}
+                  onPress={() =>
+                    props.navigation.navigate('Modal', {
+                      deviceName: "DEMO",
+                      deviceSn: "DEMOSN",
+                    })
+                  }></Button>
+              </Card.Actions>
+            </Card>
+            /*
             allDevices.length > 0 && (
               <List.AccordionGroup>
                 <ScrollView>
@@ -138,6 +163,7 @@ const Dashboard = ({ navigation }) => {
                 </ScrollView>
               </List.AccordionGroup>
             )
+            */
           )}
         </View>
       </View>
