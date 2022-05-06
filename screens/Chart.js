@@ -4,6 +4,8 @@ import {
   LineChart,
 } from 'react-native-chart-kit';
 import io from 'socket.io-client';
+import { Dimensions } from "react-native";
+
 const socket = io('http://176.235.202.77:4001/');
 
 const temp = [];
@@ -11,96 +13,94 @@ const hum = [];
 const tempLabel = [];
 
 export default function Chart(props) {
+  const screenWidth = Dimensions.get("window").width - Dimensions.get("window").width * 0.05;
+  const [updateHeat, setUpdateHeat] = useState(0);
+  const [updateHum, setUpdateHum] = useState(0);
+  const types = "humidity"
   const [chart, setChart] = useState({
-    labels: [],
+    labels: [0],
     datasets: [
       {
         label: 'Temperature',
-        data: [],
+        data: [0],
         borderColor: '#FF0000',
-        fill: true,
-      },
-      {
-        label: 'Humidity',
-        data: [],
-        borderColor: '#3e95cd',
         fill: true,
       },
     ],
   });
+  const [number, setNumber] = useState([]);
   useEffect(() => {
-    socket.emit('telemetry_topic', [props.deviceSn]);
-    socket.on('telemetry_topic_message', function (msg) {
-      let info = JSON.parse(msg);
-      console.log(info);
-      const date = new Date();
-      if (tempLabel.length > 15) {
-        tempLabel.shift();
-        temp.shift();
-      }
-      temp.push(info.values.temperature);
-      console.log(temp);
-      tempLabel.push(date.getHours() + ':' + date.getMinutes());
-    });
-    setTimeout(() => {
-      setChart([temp]);
-    }, 500);
-    /*
-    setTimeout(() => {
+    let count = 1;
 
-      setChart(
-        {
-          labels: tempLabel,
-          datasets: [
-            {
-              label: 'Temperature',
-              data: temp,
-              borderColor: '#FF0000',
-              fill: true,
-            },
-            {
-              label: 'Humidity',
-              data: hum,
-              borderColor: '#3e95cd',
-              fill: true,
-            },
-          ],
-        },
-        [tempLabel, temp, hum]
-      );
-    }, 500)*/
+    setInterval(() => {
+      let value = Math.floor(Math.random() * 40) + 30;
+      let label = count++;
 
-  }, []);
-  const chartConfig = {
-    backgroundGradientFrom: '#1E2923',
-    backgroundGradientFromOpacity: 0,
-    backgroundGradientTo: '#08130D',
-    backgroundGradientToOpacity: 0.5,
-    backgroundColor: "#32CD32",
-    color: (opacity = 1) => `rgba(255, 255, 255, ${opacity})`,
-    labelColor: (opacity = 1) => `rgba(255, 255, 255, ${opacity})`,
+      tempLabel.push(label);
+      temp.push(value);
+
+      setChart({
+        labels: tempLabel,
+        datasets: [
+          {
+            label: 'Temperature',
+            data: temp,
+            fill: true,
+          },
+        ],
+      })
+    }, 2000);
+
+  }, [])
+
+  const chartConfig_temp = {
+    backgroundGradientFrom: "#ffffff",
+    backgroundGradientTo: "#ffffff",
+    color: (opacity = 1) => `rgba(255, 0, 0, ${opacity})`,
+    labelColor: (opacity = 1) => `rgba(0, 0, 0, ${opacity})`,
+  };
+  const chartConfig1_hum = {
+    backgroundGradientFrom: "#ffffff",
+    backgroundGradientTo: "#ffffff",
+    color: (opacity = 1) => `rgba(62, 149, 205, ${opacity})`,
+    labelColor: (opacity = 1) => `rgba(0, 0, 0, ${opacity})`,
   };
 
   return (
     <View style={styles.container}>
-      <LineChart
-        data={chart}
-        width={400}
-        height={220}
-        chartConfig={chartConfig}
-      />
-      <Text>{chart}</Text>
+      {types.includes('temperature') &&
+        <>
+          <Text>Temperature</Text>
+          <LineChart
+            data={chart}
+            width={screenWidth}
+            height={220}
+            chartConfig={chartConfig_temp}
+            yAxisSuffix=" C° "
+          />
+        </>
+
+      }
+      {types.includes('humidity') &&
+        <>
+          <Text>Humidity</Text>
+          <LineChart
+            data={chart}
+            width={screenWidth}
+            height={220}
+            chartConfig={chartConfig1_hum}
+            yAxisSuffix=" C°"
+          />
+        </>
+      }
+
     </View>
+
+
+
 
   );
 }
-/*
-<LineChart
-        //data={chart}
-        //width={400}
-        //height={220}
-        //chartConfig={chartConfig}
-      />*/
 
 const styles = StyleSheet.create({
   container: {

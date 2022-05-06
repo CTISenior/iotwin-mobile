@@ -22,11 +22,13 @@ function Login() {
 
 
   const handleLogin = () => {
-    if (username == "admin" && password == "123") {
-      navigation.navigate("Dashboard");
-    } else {
+    navigation.navigate("Dashboard");
 
-    }
+    // if (username == "admin" && password == "123") {
+    //   navigation.navigate("Dashboard");
+    // } else {
+
+    // }
   };
 
 

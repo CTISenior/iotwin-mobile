@@ -141,7 +141,7 @@ const Dashboard = ({ navigation }) => {
                   color={'#2e323c'}
                   labelStyle={{ fontSize: 30 }}
                   onPress={() =>
-                    props.navigation.navigate('Modal', {
+                    navigation.navigate('Modal', {
                       deviceName: "DEMO",
                       deviceSn: "DEMOSN",
                     })
