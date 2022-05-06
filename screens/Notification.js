@@ -1,10 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import {
-  StyleSheet,
-  TouchableOpacity,
   ScrollView,
   View,
-  Alert,
   FlatList,
   Text,
   ActivityIndicator,
@@ -14,11 +11,7 @@ import {
   List,
   Colors,
   Divider,
-  Paragraph,
   Button,
-  Modal,
-  Portal,
-  Dialog,
   Provider,
 } from 'react-native-paper';
 import { DeleteNotification, GetAllNotification } from './Fetch';

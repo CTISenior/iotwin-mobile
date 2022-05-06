@@ -1,6 +1,6 @@
 import { StatusBar } from 'expo-status-bar';
 import React, { useState, useEffect } from 'react';
-import { StyleSheet, Text, View, TouchableOpacity, SafeAreaView } from 'react-native';
+import { StyleSheet, Text, View, TouchableOpacity, SafeAreaView, ToastAndroid } from 'react-native';
 import {
   Input,
   NativeBaseProvider,
@@ -9,26 +9,30 @@ import {
   Box,
   Image,
   AspectRatio,
+  Toast,
 } from 'native-base';
 import { FontAwesome5 } from '@expo/vector-icons';
 import { useNavigation } from '@react-navigation/native';
+
 import { alignContent, flex, flexDirection, width } from 'styled-system';
+import { Snackbar } from 'react-native-paper';
 
 function Login() {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
 
   const navigation = useNavigation();
-
-
+  const validationMessage = "Username or password is not valid";
+  const successfulMessage = "Username and password are valid";
   const handleLogin = () => {
-    navigation.navigate("Dashboard");
-
-    // if (username == "admin" && password == "123") {
-    //   navigation.navigate("Dashboard");
-    // } else {
-
-    // }
+    if (username == "admin" && password == "123")
+      navigation.navigate("Dashboard");
+    else {
+      if (Platform.OS != 'android')
+        Snackbar.show({ text: { validationMessage }, duration: Snackbar.LENGTH_SHORT });
+      else
+        ToastAndroid.show(validationMessage, ToastAndroid.SHORT);
+    }
   };
 
 
