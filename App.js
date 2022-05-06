@@ -2,7 +2,7 @@ import 'react-native-gesture-handler';
 import { StatusBar } from 'expo-status-bar';
 import Constants from 'expo-constants';
 import React, { useState, useEffect, useRef } from 'react';
-import { View, TouchableOpacity, Image, Alert, Platform } from 'react-native';
+import { View, TouchableOpacity, Image, Alert, Platform, ToastAndroid } from 'react-native';
 import { IconButton, Colors, Button, Badge, Portal, Dialog, Provider, Paragraph } from 'react-native-paper';
 import { NavigationContainer, createNavigationContainerRef } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
@@ -12,8 +12,9 @@ import Login from './screens/Login';
 import Modal from './screens/Modal';
 import Notification from './screens/Notification';
 import { DeleteNotification } from './screens/Fetch';
-const navigationRef = createNavigationContainerRef()
+import { Snackbar } from 'react-native-paper';
 
+const navigationRef = createNavigationContainerRef()
 function navigate(name, params) {
   if (navigationRef.isReady()) {
     navigationRef.navigate(name, params);
@@ -88,6 +89,7 @@ function SecondScreenStack({ navigation }) {
 function App() {
   //getting the list of notification from the backend
   const [allNotification, setAllNotification] = useState([]);
+  const [deleteNotificationResponse, setDeleteNotificationResponse] = useState("");
   const tenantID = "ctis";
   const getNotification = () => {
     fetch(`http://176.235.202.77:4000/api/v1/tenants/${tenantID}/alerts`)
@@ -103,12 +105,22 @@ function App() {
   const deleteAllNotification = () => {
     allNotification.map(element => {
       DeleteNotification(element.id)
+        .then(response => response.text())
+        .then(data => setDeleteNotificationResponse(data))
         .then(() => {
-          const delNotify = allNotification.filter(notify => notify.id !== element.id);
-          setAllNotification(delNotify);
+          setTimeout(() => {
+            const delNotify = allNotification.filter(notify => notify.id !== element.id);
+            setAllNotification(delNotify);
+            navigate('Dashboard');
+          }, 1000)
+        }).finally(() => {
+          if (Platform.OS != 'android')
+            Snackbar.show({ text: { deleteNotificationResponse }, duration: Snackbar.LENGTH_SHORT });
+          else
+            ToastAndroid.show(deleteNotificationResponse, ToastAndroid.SHORT);
+
         })
     });
-    navigate('Dashboard');
   }
 
   return (

@@ -23,7 +23,6 @@ function Login() {
 
   const navigation = useNavigation();
   const validationMessage = "Username or password is not valid";
-  const successfulMessage = "Username and password are valid";
   const handleLogin = () => {
     if (username == "admin" && password == "123")
       navigation.navigate("Dashboard");

@@ -6,6 +6,7 @@ import {
   Text,
   ActivityIndicator,
   SafeAreaView,
+  ToastAndroid
 } from 'react-native';
 import {
   List,
@@ -15,13 +16,14 @@ import {
   Provider,
 } from 'react-native-paper';
 import { DeleteNotification, GetAllNotification } from './Fetch';
+import moment from "moment";
+import { Snackbar } from 'react-native-paper';
+
 
 const Notification = ({ navigation }) => {
   //getting the list of notification from the backend
   const [allNotification, setAllNotification] = useState([]);
-  const [alert, setAlert] = useState(false);
-  const [selectedNotificationSerialNo, setSelectedNotificationSerialNo] = useState(null);
-  const [loading, setLoading] = useState(false);
+  const [deleteNotificationResponse, setDeleteNotificationResponse] = useState("");
   const [isNotificationLoading, setIsNotificationLoading] = useState(false);
   const tenantID = "ctis";
   const getNotification = () => {
@@ -47,7 +49,7 @@ const Notification = ({ navigation }) => {
       <List.Item
         titleNumberOfLines={2}
         title={item.message}
-        description={item.created_at}
+        description={moment(item.timestamptz).format("Do MMMM YYYY, h:mm:ss a")}
         left={(props) => (
           <List.Icon
             {...props}
@@ -73,63 +75,31 @@ const Notification = ({ navigation }) => {
         item={item}
         onPress={() => {
           DeleteNotification(item.id)
-            .finally(() => {
-              setTimeout(() => {
-                setAlert(false);
-                setLoading(true);
-              }, 500);
-            })
+            .then(response => response.text())
+            .then(data => setDeleteNotificationResponse(data))
             .then(() => {
               setTimeout(() => {
-                setSelectedNotificationSerialNo(item.sn);
                 const delNotify = allNotification.filter(
                   (notify) => notify.id !== item.id
                 );
                 setAllNotification(delNotify);
-                setLoading(false);
-                setAlert(true);
-              }, 1500);
-            });
-        }}
+              }, 500);
+            }).finally(() => {
+              if (Platform.OS != 'android')
+                Snackbar.show({ text: { deleteNotificationResponse }, duration: Snackbar.LENGTH_SHORT });
+              else
+                ToastAndroid.show(deleteNotificationResponse, ToastAndroid.SHORT);
+            })
+        }
+        }
       />
     );
-  };
-  const closeInfoText = () => {
-    setAlert(false);
-    setLoading(false);
   };
 
   //The notification listed on notification page
 
   return (
     <Provider>
-      {loading ? (
-        <View>
-          <List.Item title="Loading..." />
-        </View>
-      ) : null}
-      {alert ? (
-        <View>
-          <List.Item
-            titleNumberOfLines={2}
-            title={
-              'The notification for ' + selectedNotificationSerialNo + ' has been deleted'
-            }
-            labelStyle={{ fontSize: 50 }}
-            left={(props) => (
-              <List.Icon {...props} icon="information" color={Colors.blue500} />
-            )}
-            right={(props) => (
-              <Button
-                {...props}
-                icon="close-thick"
-                color={'#000'}
-                labelStyle={{ fontSize: 25, marginRight: 32 }}
-                onPress={closeInfoText}></Button>
-            )}
-          />
-        </View>
-      ) : null}
       {isNotificationLoading ? (
         <SafeAreaView style={{ flex: 1 }}>
           <View style={{ flex: 1, padding: 16 }}>
@@ -162,17 +132,14 @@ const Notification = ({ navigation }) => {
         </SafeAreaView>
       ) : (allNotification.length > 0 && (
         <List.AccordionGroup>
-          <ScrollView>
-            <FlatList
-              data={allNotification}
-              renderItem={renderItem}
-              keyExtractor={(item) => item.id}
-              extraData={(item) => item.id}
-            />
-          </ScrollView>
+          <FlatList
+            data={allNotification}
+            renderItem={renderItem}
+            keyExtractor={(item) => item.id}
+            extraData={(item) => item.id}
+          />
         </List.AccordionGroup>
       ))}
-
     </Provider>
   );
 };

@@ -25,9 +25,6 @@ import {
   Content,
 } from 'react-native-paper';
 
-const LeftContent = (props) => (
-  <Avatar.Icon {...props} icon="access-point" backgroundColor="#2e323c" />
-);
 const AllDevices = (props) => (
   <>
     {props.allDevices.map((element) => {
@@ -39,16 +36,16 @@ const AllDevices = (props) => (
           style={{
             margin: 3,
             flexDirection: 'column',
+            justifyContent: 'center',
+            alignItems: 'center',
             width: '48%',
-            marginTop: 15,
+            marginTop: 5,
           }}>
-          <Card.Title
-            title={element.name}
-            left={LeftContent}
-          />
-          <Card.Content>
-            <Paragraph style={{ textAlign: 'left' }}>
-              {element.types.join('/')}
+          <Card.Content style={{ alignItems: 'center', display: 'flex', flexDirection: 'column' }}>
+            <Avatar.Icon {...props} icon="access-point" color="#2e323c" backgroundColor="white" size={100} />
+            <Paragraph style={{ fontSize: 18, textAlign: 'center' }}> {element.name}</Paragraph>
+            <Paragraph style={{ fontSize: 14, textAlign: 'center' }}>
+              {element.types.join('&')}
             </Paragraph>
           </Card.Content>
           <Card.Actions style={{ justifyContent: 'center' }}>
@@ -70,8 +67,6 @@ const AllDevices = (props) => (
 );
 
 const Dashboard = ({ navigation }) => {
-  const [snackIsVisible, setSnackIsVisible] = useState(true);
-  const [distance, setDistance] = useState(0);
   const [allDevices, setAllDevices] = useState([]);
   const [isLoading, setLoading] = useState(false);
   const tenantID = "ctis";
@@ -116,39 +111,6 @@ const Dashboard = ({ navigation }) => {
               <ActivityIndicator size="large" color="#008000" />
             </View>
           ) : (
-
-            <Card
-              key="1"
-              mode="outlined"
-              style={{
-                margin: 3,
-                flexDirection: 'column',
-                width: '48%',
-                marginTop: 15,
-              }}>
-              <Card.Title
-                title="Erdem Sert"
-                left={LeftContent}
-              />
-              <Card.Content>
-                <Paragraph style={{ textAlign: 'center' }}>
-                  temperature
-                </Paragraph>
-              </Card.Content>
-              <Card.Actions style={{ justifyContent: 'center' }}>
-                <Button
-                  icon="chart-line-variant"
-                  color={'#2e323c'}
-                  labelStyle={{ fontSize: 30 }}
-                  onPress={() =>
-                    navigation.navigate('Modal', {
-                      deviceName: "DEMO",
-                      deviceSn: "DEMOSN",
-                    })
-                  }></Button>
-              </Card.Actions>
-            </Card>
-            /*
             allDevices.length > 0 && (
               <List.AccordionGroup>
                 <ScrollView>
@@ -163,7 +125,6 @@ const Dashboard = ({ navigation }) => {
                 </ScrollView>
               </List.AccordionGroup>
             )
-            */
           )}
         </View>
       </View>
