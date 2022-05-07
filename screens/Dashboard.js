@@ -55,7 +55,6 @@ const AllDevices = (props) => (
               labelStyle={{ fontSize: 30 }}
               onPress={() =>
                 props.navigation.navigate('Modal', {
-                  deviceName: element.name,
                   deviceSn: element.sn,
                 })
               }></Button>
@@ -85,8 +84,10 @@ const Dashboard = ({ navigation }) => {
     setTimeout(() => {
       setLoading(true);
       getDevices();
+
     }, 500);
   }, []);
+
   return (
     <SafeAreaView style={{ flex: 1 }}>
       <View style={{ flex: 1, padding: 16 }}>

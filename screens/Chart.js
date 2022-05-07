@@ -16,8 +16,33 @@ export default function Chart(props) {
   const screenWidth = Dimensions.get("window").width - Dimensions.get("window").width * 0.05;
   const [updateHeat, setUpdateHeat] = useState(0);
   const [updateHum, setUpdateHum] = useState(0);
-  const types = "humidity"
-  const [chart, setChart] = useState({
+
+  React.useEffect(() => {
+    socket.emit("telemetry_topic", props.deviceSn);
+    socket.on("telemetry_topic_message", function (msg) {
+
+      let info = JSON.parse(msg);
+      const date = new Date();
+      if (tempLabel.length > 5) {
+        tempLabel.shift();
+        if (temp.length > 0)
+          temp.shift();
+        if (hum.length > 0)
+          hum.shift();
+      }
+      if (!info.values.temperature.includes("{")) {
+        temp.push(parseFloat(info.values.temperature));
+        setUpdateHeat((prev) => prev + 1);
+      }
+      if (!info.values.humidity.includes("{")) {
+        hum.push(parseFloat(info.values.humidity));
+        setUpdateHum((prev) => prev + 1);
+      }
+      tempLabel.push(date.getHours() + ":" + date.getMinutes());
+    });
+  }, []);
+
+  const [tempChart, setTempChart] = useState({
     labels: [0],
     datasets: [
       {
@@ -27,19 +52,22 @@ export default function Chart(props) {
         fill: true,
       },
     ],
-  });
-  const [number, setNumber] = useState([]);
-  useEffect(() => {
-    let count = 1;
+  })
+  const [humChart, setHumChart] = useState({
+    labels: [0],
+    datasets: [
+      {
+        label: 'Humidity',
+        data: [0],
+        borderColor: '#FF0000',
+        fill: true,
+      },
+    ],
+  })
 
-    setInterval(() => {
-      let value = Math.floor(Math.random() * 40) + 30;
-      let label = count++;
-
-      tempLabel.push(label);
-      temp.push(value);
-
-      setChart({
+  React.useEffect(() => {
+    if (temp.length > 1) {
+      setTempChart({
         labels: tempLabel,
         datasets: [
           {
@@ -49,9 +77,23 @@ export default function Chart(props) {
           },
         ],
       })
-    }, 2000);
+    }
+  }, [updateHeat])
+  React.useEffect(() => {
+    if (hum.length > 1) {
+      setHumChart({
+        labels: tempLabel,
+        datasets: [
+          {
+            label: 'Humidity',
+            data: hum,
+            fill: true,
+          },
+        ],
+      })
+    }
 
-  }, [])
+  }, [updateHum])
 
   const chartConfig_temp = {
     backgroundGradientFrom: "#ffffff",
@@ -59,7 +101,7 @@ export default function Chart(props) {
     color: (opacity = 1) => `rgba(255, 0, 0, ${opacity})`,
     labelColor: (opacity = 1) => `rgba(0, 0, 0, ${opacity})`,
   };
-  const chartConfig1_hum = {
+  const chartConfig_hum = {
     backgroundGradientFrom: "#ffffff",
     backgroundGradientTo: "#ffffff",
     color: (opacity = 1) => `rgba(62, 149, 205, ${opacity})`,
@@ -68,32 +110,24 @@ export default function Chart(props) {
 
   return (
     <View style={styles.container}>
-      {types.includes('temperature') &&
-        <>
-          <Text>Temperature</Text>
-          <LineChart
-            data={chart}
-            width={screenWidth}
-            height={220}
-            chartConfig={chartConfig_temp}
-            yAxisSuffix=" C° "
-          />
-        </>
-
-      }
-      {types.includes('humidity') &&
-        <>
-          <Text>Humidity</Text>
-          <LineChart
-            data={chart}
-            width={screenWidth}
-            height={220}
-            chartConfig={chartConfig1_hum}
-            yAxisSuffix=" C°"
-          />
-        </>
-      }
-
+      <>
+        <Text>Temperature</Text>
+        <LineChart
+          data={tempChart}
+          width={screenWidth}
+          height={220}
+          chartConfig={chartConfig_temp}
+          yAxisSuffix=" C°"
+        />
+        <Text>Humidity</Text>
+        <LineChart
+          data={humChart}
+          width={screenWidth}
+          height={220}
+          chartConfig={chartConfig_hum}
+          yAxisSuffix=" C°"
+        />
+      </>
     </View>
 
 

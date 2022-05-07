@@ -24,14 +24,14 @@ function Login() {
   const navigation = useNavigation();
   const validationMessage = "Username or password is not valid";
   const handleLogin = () => {
-    if (username == "admin" && password == "123")
-      navigation.navigate("Dashboard");
-    else {
-      if (Platform.OS != 'android')
-        Snackbar.show({ text: { validationMessage }, duration: Snackbar.LENGTH_SHORT });
-      else
-        ToastAndroid.show(validationMessage, ToastAndroid.SHORT);
-    }
+    // if (username == "Admin" && password == "123")
+    navigation.navigate("Dashboard");
+    // else {
+    //   if (Platform.OS != 'android')
+    //     Snackbar.show({ text: { validationMessage }, duration: Snackbar.LENGTH_SHORT });
+    //   else
+    //     ToastAndroid.show(validationMessage, ToastAndroid.SHORT);
+    // }
   };
 
 
