@@ -14,10 +14,15 @@ const tempLabel = [];
 
 export default function Chart(props) {
   const screenWidth = Dimensions.get("window").width - Dimensions.get("window").width * 0.05;
+  const [sn, setSn] = useState("");
+  const [assetName, setAssetName] = useState("");
+  const [name, setName] = useState("");
+  const [sensorTypes, setSensorTypes] = useState([]);
   const [updateHeat, setUpdateHeat] = useState(0);
   const [updateHum, setUpdateHum] = useState(0);
 
   React.useEffect(() => {
+    getDeviceInformation();
     socket.emit("telemetry_topic", props.deviceSn);
     socket.on("telemetry_topic_message", function (msg) {
 
@@ -41,6 +46,18 @@ export default function Chart(props) {
       tempLabel.push(date.getHours() + ":" + date.getMinutes());
     });
   }, []);
+
+  const getDeviceInformation = async () => {
+
+    fetch(`http://176.235.202.77:4000/api/v1/devices/${props.deviceSn}`)
+      .then((response) => response.json())
+      .then((json) => {
+        setSn(json.sn);
+        setName(json.name);
+        setAssetName(json.asset_name);
+        setSensorTypes(json.sensor_types);
+      })
+  };
 
   const [tempChart, setTempChart] = useState({
     labels: [0],
