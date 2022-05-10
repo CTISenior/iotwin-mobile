@@ -7,7 +7,6 @@ import {
   TouchableOpacity,
   StyleSheet,
 } from 'react-native';
-import LineChart from '../screens/Chart';
 import { List } from 'react-native-paper';
 
 const Devices = ({ navigation }) => {
@@ -25,14 +24,12 @@ const Devices = ({ navigation }) => {
           description="A Building"
           left={(props) => <List.Icon {...props} icon="radio-tower" />}
         />
-        <LineChart />
         <List.Item
           style={{ width: 200 }}
           title="Device 2"
           description="B Building"
           left={(props) => <List.Icon {...props} icon="radio-tower" />}
         />
-        <LineChart />
       </View>
       <TouchableOpacity
         style={{

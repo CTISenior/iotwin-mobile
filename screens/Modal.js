@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   View,
   Text,
@@ -6,11 +6,129 @@ import {
   ScrollView,
   StyleSheet,
 } from 'react-native';
-import LineChart from '../screens/Chart';
+import {
+  LineChart,
+} from 'react-native-chart-kit';
 import { List, Colors, Avatar } from 'react-native-paper';
+import { Dimensions } from "react-native";
+import io from 'socket.io-client';
+const socket = io('http://176.235.202.77:4001/');
+
+let temp = [0];
+let hum = [0];
+let tempLabel = [0];
 const Modal = ({ route, navigation }) => {
-  const { deviceName, deviceSn } = route.params;
-  console.log(deviceSn)
+  const { deviceID } = route.params;
+
+  const screenWidth = Dimensions.get("window").width - Dimensions.get("window").width * 0.05;
+  const [sn, setSn] = useState("");
+  const [assetName, setAssetName] = useState("");
+  const [name, setName] = useState("");
+  const [sensorTypes, setSensorTypes] = useState([]);
+  const [updateHeat, setUpdateHeat] = useState(0);
+  const [updateHum, setUpdateHum] = useState(0);
+
+  useEffect(() => {
+
+
+    getDeviceInformation();
+    socket.emit("telemetry_topic", deviceID);
+    socket.on("telemetry_topic_message", function (msg) {
+      socket.connect()
+      let info = JSON.parse(msg);
+      const date = new Date();
+      if (tempLabel.length > 5) {
+        tempLabel.shift();
+        if (temp.length > 0)
+          temp.shift();
+        if (hum.length > 0)
+          hum.shift();
+      }
+      if (!info.values.temperature.includes("{")) {
+        temp.push(parseFloat(info.values.temperature));
+        setUpdateHeat((prev) => prev + 1);
+      }
+      if (!info.values.humidity.includes("{")) {
+        hum.push(parseFloat(info.values.humidity));
+        setUpdateHum((prev) => prev + 1);
+      }
+      tempLabel.push(date.getHours() + ":" + date.getMinutes());
+    });
+  }, []);
+
+  const getDeviceInformation = async () => {
+
+    fetch(`http://176.235.202.77:4000/api/v1/devices/${deviceID}`)
+      .then((response) => response.json())
+      .then((json) => {
+        setSn(json.sn);
+        setName(json.name);
+        setAssetName(json.asset_name);
+        setSensorTypes(json.sensor_types);
+      })
+  };
+
+  const [tempChart, setTempChart] = useState({
+    labels: [0],
+    datasets: [
+      {
+        label: 'Temperature',
+        data: [0],
+        borderColor: '#FF0000',
+        fill: true,
+      },
+    ],
+  })
+  const [humChart, setHumChart] = useState({
+    labels: [0],
+    datasets: [
+      {
+        label: 'Humidity',
+        data: [0],
+        borderColor: '#FF0000',
+        fill: true,
+      },
+    ],
+  })
+
+  useEffect(() => {
+    setTempChart({
+      labels: tempLabel,
+      datasets: [
+        {
+          label: 'Temperature',
+          data: temp,
+          fill: true,
+        },
+      ],
+    })
+  }, [updateHeat])
+  useEffect(() => {
+    setHumChart({
+      labels: tempLabel,
+      datasets: [
+        {
+          label: 'Humidity',
+          data: hum,
+          fill: true,
+        },
+      ],
+    })
+
+  }, [updateHum])
+
+  const chartConfig_temp = {
+    backgroundGradientFrom: "#ffffff",
+    backgroundGradientTo: "#ffffff",
+    color: (opacity = 1) => `rgba(255, 0, 0, ${opacity})`,
+    labelColor: (opacity = 1) => `rgba(0, 0, 0, ${opacity})`,
+  };
+  const chartConfig_hum = {
+    backgroundGradientFrom: "#ffffff",
+    backgroundGradientTo: "#ffffff",
+    color: (opacity = 1) => `rgba(62, 149, 205, ${opacity})`,
+    labelColor: (opacity = 1) => `rgba(0, 0, 0, ${opacity})`,
+  };
 
   return (
     <SafeAreaView style={{ backgroundColor: 'white', flex: 1 }}>
@@ -21,33 +139,83 @@ const Modal = ({ route, navigation }) => {
               <Avatar.Icon icon="access-point" color="white" backgroundColor={"#2e323c"} size={70} style={styles.cardItemIcon} />
               <View style={styles.cardItemContent}>
                 <Text style={styles.cardItemContentHeader}>Device ID</Text>
-                <Text style={styles.cardItemContentText}>{deviceSn}</Text>
+                <Text style={styles.cardItemContentText}>{sn}</Text>
               </View>
             </View>
             <View style={styles.cardItem}>
               <Avatar.Icon icon="access-point" color="white" backgroundColor={"#2e323c"} size={70} style={styles.cardItemIcon} />
               <View style={styles.cardItemContent}>
                 <Text style={styles.cardItemContentHeader}>Device Name</Text>
-                <Text style={styles.cardItemContentText}>{deviceName}</Text>
+                <Text style={styles.cardItemContentText}>{name}</Text>
               </View>
             </View>
             <View style={styles.cardItem}>
               <Avatar.Icon icon="thermometer-lines" color="white" backgroundColor={"#2e323c"} size={70} style={styles.cardItemIcon} />
               <View style={styles.cardItemContent}>
-                <Text style={styles.cardItemContentHeader}>Max Heat</Text>
-                <Text style={styles.cardItemContentText}>{deviceName}</Text>
+                <Text style={styles.cardItemContentHeader}>Asset Name</Text>
+                <Text style={styles.cardItemContentText}>{assetName}</Text>
+
               </View>
             </View>
             <View style={styles.cardItem}>
               <Avatar.Icon icon="thermometer-lines" color="white" backgroundColor={"#2e323c"} size={70} style={styles.cardItemIcon} />
               <View style={styles.cardItemContent}>
-                <Text style={styles.cardItemContentHeader}>Average Heat</Text>
-                <Text style={styles.cardItemContentText}>{deviceName}</Text>
+                <Text style={styles.cardItemContentHeader}>Type</Text>
+                <Text style={styles.cardItemContentText}>{sensorTypes.join(" & ")}</Text>
+
               </View>
             </View>
           </View>
           <View style={styles.chart}>
-            <LineChart deviceSn={deviceSn} />
+            <>
+              {sensorTypes.length > 1 ? (
+                <>
+                  <Text>Temperature</Text>
+                  <LineChart
+                    data={tempChart}
+                    width={screenWidth}
+                    height={220}
+                    chartConfig={chartConfig_temp}
+                    yAxisSuffix=" C°"
+                  />
+                  <Text>Humidity</Text>
+                  <LineChart
+                    data={humChart}
+                    width={screenWidth}
+                    height={220}
+                    chartConfig={chartConfig_hum}
+                    yAxisSuffix=" C°"
+                  />
+                </>
+
+              ) : (
+                sensorTypes == "temperature" ? (
+                  <>
+                    <Text>Temperature</Text>
+                    <LineChart
+                      data={tempChart}
+                      width={screenWidth}
+                      height={220}
+                      chartConfig={chartConfig_temp}
+                      yAxisSuffix=" C°"
+                    />
+                  </>
+
+                ) : (
+                  <>
+                    <Text>Humidity</Text>
+                    <LineChart
+                      data={humChart}
+                      width={screenWidth}
+                      height={220}
+                      chartConfig={chartConfig_hum}
+                      yAxisSuffix=" C°"
+                    />
+                  </>
+                )
+              )}
+
+            </>
           </View>
         </View>
       </ScrollView>
@@ -58,8 +226,9 @@ export default Modal;
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    display: 'flex',
-    flexDirection: 'column',
+    backgroundColor: '#fff',
+    alignItems: 'center',
+    justifyContent: 'center',
   },
   cardComponent: {
     display: 'flex',
@@ -98,6 +267,5 @@ const styles = StyleSheet.create({
   chart: {
     marginTop: 50,
     width: '100%',
-    backgroundColor: '#7FFF00',
   },
 });

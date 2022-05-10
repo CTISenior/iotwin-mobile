@@ -12,7 +12,6 @@ import {
   TouchableHighlight,
   ActivityIndicator,
 } from 'react-native';
-import LineChart from '../screens/Chart';
 import {
   Card,
   IconButton,
@@ -45,7 +44,7 @@ const AllDevices = (props) => (
             <Avatar.Icon {...props} icon="access-point" color="#2e323c" backgroundColor="white" size={100} />
             <Paragraph style={{ fontSize: 18, textAlign: 'center' }}> {element.name}</Paragraph>
             <Paragraph style={{ fontSize: 14, textAlign: 'center' }}>
-              {element.types.join('&')}
+              {element.sensor_types.join('&')}
             </Paragraph>
           </Card.Content>
           <Card.Actions style={{ justifyContent: 'center' }}>
@@ -55,7 +54,7 @@ const AllDevices = (props) => (
               labelStyle={{ fontSize: 30 }}
               onPress={() =>
                 props.navigation.navigate('Modal', {
-                  deviceSn: element.sn,
+                  deviceID: element.id,
                 })
               }></Button>
           </Card.Actions>
