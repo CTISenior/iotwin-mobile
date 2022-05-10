@@ -150,7 +150,7 @@ const Modal = ({ route, navigation }) => {
               </View>
             </View>
             <View style={styles.cardItem}>
-              <Avatar.Icon icon="thermometer-lines" color="white" backgroundColor={"#2e323c"} size={70} style={styles.cardItemIcon} />
+              <Avatar.Icon icon="office-building" color="white" backgroundColor={"#2e323c"} size={70} style={styles.cardItemIcon} />
               <View style={styles.cardItemContent}>
                 <Text style={styles.cardItemContentHeader}>Asset Name</Text>
                 <Text style={styles.cardItemContentText}>{assetName}</Text>

@@ -53,8 +53,8 @@ const Notification = ({ navigation }) => {
         left={(props) => (
           <List.Icon
             {...props}
-            icon={item.type === 'warning' ? 'alert' : 'alert-rhombus'}
-            color={item.type === 'warning' ? Colors.orangeA700 : Colors.redA700}
+            icon={item.severity === 'warning' ? 'alert' : 'alert-rhombus'}
+            color={item.severity === 'warning' ? Colors.orangeA700 : Colors.redA700}
           />
         )}
         right={(props) => (
