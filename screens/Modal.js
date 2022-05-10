@@ -162,7 +162,6 @@ const Modal = ({ route, navigation }) => {
               <View style={styles.cardItemContent}>
                 <Text style={styles.cardItemContentHeader}>Type</Text>
                 <Text style={styles.cardItemContentText}>{sensorTypes.join(" & ")}</Text>
-
               </View>
             </View>
           </View>
