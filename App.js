@@ -44,14 +44,12 @@ function FirstScreenStack({ navigation }) {
   return (
     <Stack.Navigator initialRouteName="Dashboard">
       <Stack.Screen
-        name="Dashboard"
+        name="Dashboard "
         component={Dashboard}
         options={{
           headerShown: false,
           title: '', //Set Header Title
-          headerLeft: () => (
-            <NavigationDrawerStructure navigationProps={navigation} />
-          ),
+
         }}
       />
     </Stack.Navigator>
@@ -64,9 +62,7 @@ function SecondScreenStack({ navigation }) {
       initialRouteName="Notification"
       screenOptions={{
         headerShown: false,
-        headerLeft: () => (
-          <NavigationDrawerStructure navigationProps={navigation} />
-        ),
+
         headerStyle: {
           backgroundColor: '#2e323c', //Set Header color
         },
@@ -156,7 +152,7 @@ function App() {
             }}
             component={SecondScreenStack} />
         </Stack.Group>
-        <Stack.Group screenOptions={{ presentation: 'modal' }}>
+        <Stack.Group >
           <Stack.Screen
             name="Modal"
             options={{ title: 'Graph of Selected Device' }}

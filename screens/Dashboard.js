@@ -12,7 +12,6 @@ import {
   TouchableHighlight,
   ActivityIndicator,
 } from 'react-native';
-import LineChart from '../screens/Chart';
 import {
   Card,
   IconButton,
@@ -55,7 +54,8 @@ const AllDevices = (props) => (
               labelStyle={{ fontSize: 30 }}
               onPress={() =>
                 props.navigation.navigate('Modal', {
-                  deviceSn: element.id,
+                  deviceID: element.id,
+
                 })
               }></Button>
           </Card.Actions>

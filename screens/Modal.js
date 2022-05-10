@@ -10,16 +10,15 @@ import {
   LineChart,
 } from 'react-native-chart-kit';
 import { List, Colors, Avatar } from 'react-native-paper';
-import io from 'socket.io-client';
 import { Dimensions } from "react-native";
-
+import io from 'socket.io-client';
 const socket = io('http://176.235.202.77:4001/');
 
-const temp = [];
-const hum = [];
-const tempLabel = [];
+let temp = [0];
+let hum = [0];
+let tempLabel = [0];
 const Modal = ({ route, navigation }) => {
-  const { deviceName, deviceSn } = route.params;
+  const { deviceID } = route.params;
 
   const screenWidth = Dimensions.get("window").width - Dimensions.get("window").width * 0.05;
   const [sn, setSn] = useState("");
@@ -30,10 +29,12 @@ const Modal = ({ route, navigation }) => {
   const [updateHum, setUpdateHum] = useState(0);
 
   useEffect(() => {
-    getDeviceInformation();
-    socket.emit("telemetry_topic", deviceSn);
-    socket.on("telemetry_topic_message", function (msg) {
 
+
+    getDeviceInformation();
+    socket.emit("telemetry_topic", deviceID);
+    socket.on("telemetry_topic_message", function (msg) {
+      socket.connect()
       let info = JSON.parse(msg);
       const date = new Date();
       if (tempLabel.length > 5) {
@@ -57,7 +58,7 @@ const Modal = ({ route, navigation }) => {
 
   const getDeviceInformation = async () => {
 
-    fetch(`http://176.235.202.77:4000/api/v1/devices/${deviceSn}`)
+    fetch(`http://176.235.202.77:4000/api/v1/devices/${deviceID}`)
       .then((response) => response.json())
       .then((json) => {
         setSn(json.sn);
@@ -91,32 +92,28 @@ const Modal = ({ route, navigation }) => {
   })
 
   useEffect(() => {
-    if (temp.length > 1) {
-      setTempChart({
-        labels: tempLabel,
-        datasets: [
-          {
-            label: 'Temperature',
-            data: temp,
-            fill: true,
-          },
-        ],
-      })
-    }
+    setTempChart({
+      labels: tempLabel,
+      datasets: [
+        {
+          label: 'Temperature',
+          data: temp,
+          fill: true,
+        },
+      ],
+    })
   }, [updateHeat])
   useEffect(() => {
-    if (hum.length > 1) {
-      setHumChart({
-        labels: tempLabel,
-        datasets: [
-          {
-            label: 'Humidity',
-            data: hum,
-            fill: true,
-          },
-        ],
-      })
-    }
+    setHumChart({
+      labels: tempLabel,
+      datasets: [
+        {
+          label: 'Humidity',
+          data: hum,
+          fill: true,
+        },
+      ],
+    })
 
   }, [updateHum])
 
@@ -155,36 +152,69 @@ const Modal = ({ route, navigation }) => {
             <View style={styles.cardItem}>
               <Avatar.Icon icon="thermometer-lines" color="white" backgroundColor={"#2e323c"} size={70} style={styles.cardItemIcon} />
               <View style={styles.cardItemContent}>
-                <Text style={styles.cardItemContentHeader}>Max Heat</Text>
-                <Text style={styles.cardItemContentText}>{deviceName}</Text>
+                <Text style={styles.cardItemContentHeader}>Asset Name</Text>
+                <Text style={styles.cardItemContentText}>{assetName}</Text>
+
               </View>
             </View>
             <View style={styles.cardItem}>
               <Avatar.Icon icon="thermometer-lines" color="white" backgroundColor={"#2e323c"} size={70} style={styles.cardItemIcon} />
               <View style={styles.cardItemContent}>
                 <Text style={styles.cardItemContentHeader}>Average Heat</Text>
-                <Text style={styles.cardItemContentText}>{deviceName}</Text>
+                <Text style={styles.cardItemContentText}>{sensorTypes.join(" & ")}</Text>
+
               </View>
             </View>
           </View>
           <View style={styles.chart}>
             <>
-              <Text>Temperature</Text>
-              <LineChart
-                data={tempChart}
-                width={screenWidth}
-                height={220}
-                chartConfig={chartConfig_temp}
-                yAxisSuffix=" C°"
-              />
-              <Text>Humidity</Text>
-              <LineChart
-                data={humChart}
-                width={screenWidth}
-                height={220}
-                chartConfig={chartConfig_hum}
-                yAxisSuffix=" C°"
-              />
+              {sensorTypes.length > 1 ? (
+                <>
+                  <Text>Temperature</Text>
+                  <LineChart
+                    data={tempChart}
+                    width={screenWidth}
+                    height={220}
+                    chartConfig={chartConfig_temp}
+                    yAxisSuffix=" C°"
+                  />
+                  <Text>Humidity</Text>
+                  <LineChart
+                    data={humChart}
+                    width={screenWidth}
+                    height={220}
+                    chartConfig={chartConfig_hum}
+                    yAxisSuffix=" C°"
+                  />
+                </>
+
+              ) : (
+                sensorTypes == "temperature" ? (
+                  <>
+                    <Text>Temperature</Text>
+                    <LineChart
+                      data={tempChart}
+                      width={screenWidth}
+                      height={220}
+                      chartConfig={chartConfig_temp}
+                      yAxisSuffix=" C°"
+                    />
+                  </>
+
+                ) : (
+                  <>
+                    <Text>Humidity</Text>
+                    <LineChart
+                      data={humChart}
+                      width={screenWidth}
+                      height={220}
+                      chartConfig={chartConfig_hum}
+                      yAxisSuffix=" C°"
+                    />
+                  </>
+                )
+              )}
+
             </>
           </View>
         </View>
