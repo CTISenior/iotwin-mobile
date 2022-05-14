@@ -1,6 +1,6 @@
 export const GetAllDevices = async () => {
   try {
-    const devices = await fetch('http://176.235.202.77:4000/api/v1/devices');
+    const devices = await fetch('http://127.0.0.1:4000/api/v1/devices');
     return devices.json;
   } catch (error) {
     console.log(error);
@@ -9,7 +9,7 @@ export const GetAllDevices = async () => {
 export const GetAllNotification = async () => {
   try {
     const notification = await fetch(
-      'http://176.235.202.77:4000/api/v1/alerts'
+      'http://127.0.0.1:4000/api/v1/alerts'
     );
     return await notification.json;
   } catch (err) {
@@ -18,7 +18,7 @@ export const GetAllNotification = async () => {
 };
 export const DeleteNotification = async (id) => {
   try {
-    return await fetch(`http://176.235.202.77:4000/api/v1/alerts/${id}`, {
+    return await fetch(`http://127.0.0.1:4000/api/v1/alerts/${id}`, {
       method: 'DELETE',
       headers: {
         'Content-type': 'application/json',

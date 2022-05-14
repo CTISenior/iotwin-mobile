@@ -12,7 +12,7 @@ import {
 import { List, Colors, Avatar } from 'react-native-paper';
 import { Dimensions } from "react-native";
 import io from 'socket.io-client';
-const socket = io('http://176.235.202.77:4001/');
+const socket = io('http://127.0.0.1:4001/');
 
 let temp = [0];
 let hum = [0];
@@ -58,7 +58,7 @@ const Modal = ({ route, navigation }) => {
 
   const getDeviceInformation = async () => {
 
-    fetch(`http://176.235.202.77:4000/api/v1/devices/${deviceID}`)
+    fetch(`http://127.0.0.1:4000/api/v1/devices/${deviceID}`)
       .then((response) => response.json())
       .then((json) => {
         setSn(json.sn);

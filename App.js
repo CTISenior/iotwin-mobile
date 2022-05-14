@@ -88,7 +88,7 @@ function App() {
   const [deleteNotificationResponse, setDeleteNotificationResponse] = useState("");
   const tenantID = "ctis";
   const getNotification = () => {
-    fetch(`http://176.235.202.77:4000/api/v1/tenants/${tenantID}/alerts`)
+    fetch(`http://127.0.0.1:4000/api/v1/tenants/${tenantID}/alerts`)
       .then((response) => response.json())
       .then((json) => setAllNotification(json))
   }

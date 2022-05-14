@@ -69,7 +69,7 @@ const Dashboard = ({ navigation }) => {
   const [isLoading, setLoading] = useState(false);
   const tenantID = "ctis";
   const getDevices = () => {
-    fetch(`http://176.235.202.77:4000/api/v1/tenants/${tenantID}/devices`)
+    fetch(`http://127.0.0.1:4000/api/v1/tenants/${tenantID}/devices`)
       .then((response) => response.json())
       .then((json) => setAllDevices(json))
       .catch((error) => console.error(error))
