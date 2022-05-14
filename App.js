@@ -81,7 +81,7 @@ function SecondScreenStack({ navigation }) {
     </Stack.Navigator>
   );
 }
-//<Drawer.Screen name="A" component={LoginScreenStack} />
+
 function App() {
   //getting the list of notification from the backend
   const [allNotification, setAllNotification] = useState([]);
